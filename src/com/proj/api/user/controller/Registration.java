@@ -56,4 +56,16 @@ public class Registration {
         kvConn.set(String.valueOf(iId), json.toJson(loggedInUserInfGson), LoggedInUserInfGson.iSessionExpire);
         kvConn.close();
     }
+
+    public String getsPreToken() {
+        return sPreToken;
+    }
+
+    public int getiId() {
+        return iId;
+    }
+
+    public int getiType() {
+        return iType;
+    }
 }

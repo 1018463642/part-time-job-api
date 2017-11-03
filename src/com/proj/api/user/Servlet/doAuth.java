@@ -37,13 +37,13 @@ public class doAuth extends javax.servlet.http.HttpServlet {
                     authorization.getsPreToken());
             retStr = json.toJson(authorizationRetGson);
         } catch (InvalidParamsException e) {
-            retStr = json.toJson(new ErrGsonStructure(501));
+            retStr = json.toJson(new ErrGsonStructure(401));
         } catch (NonRelationalDatabaseException e) {
-            retStr = json.toJson(new ErrGsonStructure(503));
+            retStr = json.toJson(new ErrGsonStructure(501));
         } catch (InvaildOperationException e) {
-            e.printStackTrace();
+            retStr = json.toJson(new ErrGsonStructure(503));
         } catch (PasswordNotCorrectException e) {
-            e.printStackTrace();
+            retStr = json.toJson(new ErrGsonStructure(405));
         }
         response.setHeader("content-type", "text/html;charset=utf-8");
         response.getWriter().print(retStr);
@@ -63,13 +63,13 @@ public class doAuth extends javax.servlet.http.HttpServlet {
                     , preAuthorization.getsKey());
             retStr = json.toJson(preAuthorizationRetGson);
         } catch (InvalidParamsException e) {
-            retStr = json.toJson(new ErrGsonStructure(501));
+            retStr = json.toJson(new ErrGsonStructure(401));
         } catch (UsernameNotExistException e) {
-            retStr = json.toJson(new ErrGsonStructure(502));
+            retStr = json.toJson(new ErrGsonStructure(402));
         } catch (NonRelationalDatabaseException e) {
-            retStr = json.toJson(new ErrGsonStructure(503));
+            retStr = json.toJson(new ErrGsonStructure(501));
         } catch (RelationalDatabaseException e) {
-            retStr = json.toJson(new ErrGsonStructure(504));
+            retStr = json.toJson(new ErrGsonStructure(502));
         }
         response.setHeader("content-type", "text/html;charset=utf-8");
         response.getWriter().print(retStr);

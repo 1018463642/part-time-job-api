@@ -3,6 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
     <servlet>
         <servlet-name>doAuth</servlet-name>
         <servlet-class>com.proj.api.user.Servlet.doAuth</servlet-class>
@@ -11,4 +12,14 @@
         <servlet-name>doAuth</servlet-name>
         <url-pattern>/api/user/auth</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>doReg</servlet-name>
+        <servlet-class>com.proj.api.user.Servlet.doReg</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>doReg</servlet-name>
+        <url-pattern>/api/user/reg</url-pattern>
+    </servlet-mapping>
+
 </web-app>

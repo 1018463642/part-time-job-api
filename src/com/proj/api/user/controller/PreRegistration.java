@@ -21,24 +21,24 @@ public class PreRegistration {
     private String sUsername;
     private String sKey;
 
-    public PreRegistration(String _sUsername,String _sPhoneNum) throws NonRelationalDatabaseException, RelationalDatabaseException, UserAlreadyExistException {
-        this.sUsername=_sUsername;
-        RelationalDatabase rConn=new RelationalDatabase();
-        ResultSet result=rConn.doQuery("SELECT id FROM user_auth WHERE username=?",new Object[]{_sUsername});
+    public PreRegistration(String _sUsername, String _sPhoneNum) throws NonRelationalDatabaseException, RelationalDatabaseException, UserAlreadyExistException {
+        this.sUsername = _sUsername;
+        RelationalDatabase rConn = new RelationalDatabase();
+        ResultSet result = rConn.doQuery("SELECT id FROM user_auth WHERE username=?", new String[]{_sUsername});
         try {
-            if(result.getRow()!=0){
+            if (result.first()) {
                 throw new UserAlreadyExistException();
             }
         } catch (SQLException e) {
             throw new RelationalDatabaseException(e);
         }
-        String sRandomStr= RandomUtils.getRandomString(16);
-        PreRegistrationInfGson preRegistrationGson=new PreRegistrationInfGson(_sUsername,_sPhoneNum,sRandomStr);
-        Gson json=new Gson();
-        KeyValueDatabase kvConn=new KeyValueDatabase(PreRegistrationInfGson.sessionPrefix);
-        kvConn.set(_sUsername,json.toJson(preRegistrationGson),PreRegistrationInfGson.iSessionExpire);
+        String sRandomStr = RandomUtils.getRandomString(16);
+        PreRegistrationInfGson preRegistrationGson = new PreRegistrationInfGson(_sUsername, _sPhoneNum, sRandomStr);
+        Gson json = new Gson();
+        KeyValueDatabase kvConn = new KeyValueDatabase(PreRegistrationInfGson.sessionPrefix);
+        kvConn.set(_sUsername, json.toJson(preRegistrationGson), PreRegistrationInfGson.iSessionExpire);
         kvConn.close();
-        String sPhoneVerifyCode= PhoneVerifyCodeUtils.send(_sPhoneNum);
+        String sPhoneVerifyCode = PhoneVerifyCodeUtils.send(_sPhoneNum);
         this.sKey = AESUtils.encryptData(sRandomStr, sPhoneVerifyCode);
     }
 
