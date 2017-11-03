@@ -5,13 +5,12 @@ import com.proj.api.database.KeyValueDatabase;
 import com.proj.api.database.RelationalDatabase;
 import com.proj.api.exception.database.NonRelationalDatabaseException;
 import com.proj.api.exception.database.RelationalDatabaseException;
-import com.proj.api.exception.user.PreAuthorizationFailedException;
+import com.proj.api.exception.user.UsernameNotExistException;
 import com.proj.api.user.gson.PreAuthorizationGson;
 import com.proj.api.utils.AESUtils;
 import com.proj.api.utils.RandomUtils;
 import redis.clients.jedis.exceptions.JedisException;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -25,7 +24,7 @@ public class PreAuthorization {
     private String sUsername;
     private String sKey;
 
-    public PreAuthorization(String _sUsername) throws RelationalDatabaseException, PreAuthorizationFailedException, NonRelationalDatabaseException {
+    public PreAuthorization(String _sUsername) throws UsernameNotExistException, RelationalDatabaseException, NonRelationalDatabaseException {
         this.sUsername = _sUsername;
         String sRandomStr = RandomUtils.getRandomString(16);
         int iId, iType, iAuthority, iStatus;
@@ -42,7 +41,7 @@ public class PreAuthorization {
                 iAuthority = result.getInt("authority");
                 iStatus = result.getInt("status");
             } else {
-                throw new PreAuthorizationFailedException();
+                throw new UsernameNotExistException();
             }
         } catch (SQLException e) {
             throw new RelationalDatabaseException(e);
