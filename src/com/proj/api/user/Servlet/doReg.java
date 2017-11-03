@@ -9,6 +9,7 @@ import com.proj.api.exception.user.InvaildOperationException;
 import com.proj.api.exception.user.PasswordNotCorrectException;
 import com.proj.api.exception.user.UserAlreadyExistException;
 import com.proj.api.exception.utils.AESDecryptException;
+import com.proj.api.exception.utils.AESEncryptException;
 import com.proj.api.user.controller.Authorization;
 import com.proj.api.user.controller.PreRegistration;
 import com.proj.api.user.controller.Registration;
@@ -36,19 +37,24 @@ public class doReg extends HttpServlet {
                     registrationRecvGson.getUsername()
                     , registrationRecvGson.getPassword_key()
                     , registrationRecvGson.getType());
-            RegistrationRetGson registrationRetGson=new RegistrationRetGson(
+            RegistrationRetGson registrationRetGson = new RegistrationRetGson(
                     registration.getsPreToken()
-                    ,registration.getiId()
-                    ,registration.getiType());
+                    , registration.getiId()
+                    , registration.getiType());
             retStr = json.toJson(registrationRetGson);
         } catch (InvalidParamsException e) {
             retStr = json.toJson(new ErrGsonStructure(401));
         } catch (AESDecryptException e) {
             retStr = json.toJson(new ErrGsonStructure(404));
+            e.printStackTrace();
+        } catch (AESEncryptException e) {
+            retStr = json.toJson(new ErrGsonStructure(405));
+            e.printStackTrace();
         } catch (NonRelationalDatabaseException e) {
             retStr = json.toJson(new ErrGsonStructure(501));
-        }catch (RelationalDatabaseException e) {
+        } catch (RelationalDatabaseException e) {
             retStr = json.toJson(new ErrGsonStructure(502));
+            e.printStackTrace();
         } catch (InvaildOperationException e) {
             retStr = json.toJson(new ErrGsonStructure(503));
         }
@@ -57,23 +63,25 @@ public class doReg extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String retStr="";
-        Gson json=new Gson();
+        String retStr = "";
+        Gson json = new Gson();
         try {
             String sUsername = request.getParameter("username");
             String sPhoneNum = request.getParameter("phone_num");
             if (sUsername == null || sPhoneNum == null) {
                 throw new InvalidParamsException();
             }
-            PreRegistration preRegistration=new PreRegistration(sUsername,sPhoneNum);
-            PreRegistrationRetGson preRegistrationRetGson=new PreRegistrationRetGson(
-                    preRegistration.getsUsername(),preRegistration.getsKey());
-            retStr=json.toJson(preRegistration);
+            PreRegistration preRegistration = new PreRegistration(sUsername, sPhoneNum);
+            PreRegistrationRetGson preRegistrationRetGson = new PreRegistrationRetGson(
+                    preRegistration.getsUsername(), preRegistration.getsKey());
+            retStr = json.toJson(preRegistration);
         } catch (InvalidParamsException e) {
             retStr = json.toJson(new ErrGsonStructure(401));
-        }  catch (UserAlreadyExistException e) {
+        } catch (UserAlreadyExistException e) {
             retStr = json.toJson(new ErrGsonStructure(403));
-        }catch (NonRelationalDatabaseException e) {
+        } catch (AESEncryptException e) {
+            retStr = json.toJson(new ErrGsonStructure(405));
+        } catch (NonRelationalDatabaseException e) {
             retStr = json.toJson(new ErrGsonStructure(501));
         } catch (RelationalDatabaseException e) {
             retStr = json.toJson(new ErrGsonStructure(502));

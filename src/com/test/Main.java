@@ -5,6 +5,7 @@ import com.proj.api.exception.database.RelationalDatabaseException;
 import com.proj.api.exception.user.InvaildOperationException;
 import com.proj.api.exception.user.PasswordNotCorrectException;
 import com.proj.api.exception.user.UsernameNotExistException;
+import com.proj.api.exception.utils.AESEncryptException;
 import com.proj.api.user.controller.Authorization;
 import com.proj.api.user.controller.PreAuthorization;
 
@@ -25,6 +26,8 @@ public class Main {
         } catch (InvaildOperationException e) {
             e.printStackTrace();
         } catch (PasswordNotCorrectException e) {
+            e.printStackTrace();
+        } catch (AESEncryptException e) {
             e.printStackTrace();
         }
         System.exit(0);

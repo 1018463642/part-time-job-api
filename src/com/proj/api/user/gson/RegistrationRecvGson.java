@@ -19,6 +19,7 @@ public class RegistrationRecvGson {
     }
 
     public void setUsername(String username) {
+        System.out.println("username:"+username);
         this.username = username;
     }
 
@@ -31,6 +32,7 @@ public class RegistrationRecvGson {
     }
 
     public void setPassword_key(String password_key) {
+        System.out.println("password_key:"+password_key);
         this.password_key = password_key;
     }
 
@@ -43,6 +45,7 @@ public class RegistrationRecvGson {
     }
 
     public void setType(int type) {
+        System.out.println("type:"+String.valueOf(type));
         this.type = type;
     }
 }

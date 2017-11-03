@@ -8,6 +8,7 @@ import com.proj.api.exception.other.InvalidParamsException;
 import com.proj.api.exception.user.InvaildOperationException;
 import com.proj.api.exception.user.PasswordNotCorrectException;
 import com.proj.api.exception.user.UsernameNotExistException;
+import com.proj.api.exception.utils.AESEncryptException;
 import com.proj.api.user.controller.Authorization;
 import com.proj.api.user.controller.PreAuthorization;
 import com.proj.api.user.gson.AuthorizationRecvGson;
@@ -38,12 +39,14 @@ public class doAuth extends javax.servlet.http.HttpServlet {
             retStr = json.toJson(authorizationRetGson);
         } catch (InvalidParamsException e) {
             retStr = json.toJson(new ErrGsonStructure(401));
+        } catch (AESEncryptException e) {
+            retStr = json.toJson(new ErrGsonStructure(405));
+        } catch (PasswordNotCorrectException e) {
+            retStr = json.toJson(new ErrGsonStructure(406));
         } catch (NonRelationalDatabaseException e) {
             retStr = json.toJson(new ErrGsonStructure(501));
         } catch (InvaildOperationException e) {
             retStr = json.toJson(new ErrGsonStructure(503));
-        } catch (PasswordNotCorrectException e) {
-            retStr = json.toJson(new ErrGsonStructure(405));
         }
         response.setHeader("content-type", "text/html;charset=utf-8");
         response.getWriter().print(retStr);
@@ -66,6 +69,8 @@ public class doAuth extends javax.servlet.http.HttpServlet {
             retStr = json.toJson(new ErrGsonStructure(401));
         } catch (UsernameNotExistException e) {
             retStr = json.toJson(new ErrGsonStructure(402));
+        } catch (AESEncryptException e) {
+            retStr = json.toJson(new ErrGsonStructure(405));
         } catch (NonRelationalDatabaseException e) {
             retStr = json.toJson(new ErrGsonStructure(501));
         } catch (RelationalDatabaseException e) {

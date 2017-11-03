@@ -1,5 +1,7 @@
 package com.proj.api.utils;
 
+import com.proj.api.exception.utils.AESDecryptException;
+import com.proj.api.exception.utils.AESEncryptException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -12,7 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AESUtils {
 
-    public static String encryptData(String _sData, String _sKey) {
+    public static String encryptData(String _sData, String _sKey) throws AESEncryptException {
         try {
             if (_sKey.length() < 16) {
                 _sKey = _sKey + DigestUtils.md5Hex(_sKey).substring(0, 16 - _sKey.length());
@@ -35,11 +37,11 @@ public class AESUtils {
             return new String(Base64.encodeBase64(encrypted));
         } catch (Exception e) {
             e.printStackTrace();
+            throw new AESEncryptException();
         }
-        return null;
     }
 
-    public static String decryptData(String _sData, String _sKey) {
+    public static String decryptData(String _sData, String _sKey) throws AESDecryptException {
         try {
             if (_sKey.length() < 16) {
                 _sKey = _sKey + DigestUtils.md5Hex(_sKey).substring(0, 16 - _sKey.length());
@@ -47,8 +49,8 @@ public class AESUtils {
                 _sKey = _sKey.substring(0, 16);
             }
             byte[] encrypted1 =Base64.decodeBase64(_sData.getBytes());
-            Cipher cipher = Cipher.getInstance("AESUtils/CBC/NoPadding");
-            SecretKeySpec keyspec = new SecretKeySpec(_sKey.getBytes(), "AESUtils");
+            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+            SecretKeySpec keyspec = new SecretKeySpec(_sKey.getBytes(), "AES");
             IvParameterSpec ivspec = new IvParameterSpec(_sKey.getBytes());
             cipher.init(Cipher.DECRYPT_MODE, keyspec, ivspec);
             byte[] original = cipher.doFinal(encrypted1);
@@ -56,8 +58,8 @@ public class AESUtils {
             return originalString;
         } catch (Exception e) {
             e.printStackTrace();
+            throw new AESDecryptException();
         }
-        return null;
     }
 
 }

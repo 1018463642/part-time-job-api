@@ -5,9 +5,9 @@ import com.proj.api.database.KeyValueDatabase;
 import com.proj.api.database.RelationalDatabase;
 import com.proj.api.exception.database.NonRelationalDatabaseException;
 import com.proj.api.exception.database.RelationalDatabaseException;
-import com.proj.api.exception.other.InvalidParamsException;
 import com.proj.api.exception.user.InvaildOperationException;
 import com.proj.api.exception.utils.AESDecryptException;
+import com.proj.api.exception.utils.AESEncryptException;
 import com.proj.api.user.gson.LoggedInUserInfGson;
 import com.proj.api.user.gson.PreRegistrationInfGson;
 import com.proj.api.utils.AESUtils;
@@ -22,7 +22,7 @@ public class Registration {
     private int iId;
     private int iType;
 
-    public Registration(String _sUsername,String _sPasswordKey,int _iType) throws RelationalDatabaseException, NonRelationalDatabaseException, InvaildOperationException, AESDecryptException {
+    public Registration(String _sUsername,String _sPasswordKey,int _iType) throws RelationalDatabaseException, NonRelationalDatabaseException, InvaildOperationException, AESDecryptException, AESEncryptException {
         if(_iType-2 > 0) {
             throw new InvaildOperationException();
         }
@@ -46,10 +46,10 @@ public class Registration {
                 DigestUtils.md5Hex(sClearPassword + SaltUtils.sPrePasswordSalt)
                         + SaltUtils.sAuthPasswordSalt);
         RelationalDatabase rConn = new RelationalDatabase();
-        rConn.doSQL("INSERT INTO user_auth(username,tran_password,auth_password,type,authority,status) VALUES(?,?,?,?,?,?,?)"
+        rConn.doSQL("INSERT INTO user_auth(username,tran_password,auth_password,type,authority,status) VALUES(?,?,?,?,?,?)"
                 , new Object[]{_sUsername, sTranPassword, sAuthPassword, _iType, 1, 0});
-        rConn.close();
         this.iId = rConn.getLastInsertId("user_auth");
+        rConn.close();
         this.sPreToken= AESUtils.encryptData(preRegistrationInfGson.getRand_str(), sTranPassword);
         LoggedInUserInfGson loggedInUserInfGson=new LoggedInUserInfGson(this.iId,_sUsername,iType,1,0,preRegistrationInfGson.getRand_str(),System.currentTimeMillis());
         kvConn.setPrefix(LoggedInUserInfGson.sessionPrefix);

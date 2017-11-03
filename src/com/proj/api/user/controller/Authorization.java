@@ -5,6 +5,7 @@ import com.proj.api.database.KeyValueDatabase;
 import com.proj.api.exception.database.NonRelationalDatabaseException;
 import com.proj.api.exception.user.InvaildOperationException;
 import com.proj.api.exception.user.PasswordNotCorrectException;
+import com.proj.api.exception.utils.AESEncryptException;
 import com.proj.api.user.gson.LoggedInUserInfGson;
 import com.proj.api.user.gson.PreAuthorizationGson;
 import com.proj.api.utils.AESUtils;
@@ -20,7 +21,7 @@ public class Authorization {
     private String sUsername;
     private String sPreToken;
 
-    public Authorization(String _sUsername, String _sRandStr, String sPrePassword) throws NonRelationalDatabaseException, InvaildOperationException, PasswordNotCorrectException {
+    public Authorization(String _sUsername, String _sRandStr, String sPrePassword) throws NonRelationalDatabaseException, InvaildOperationException, PasswordNotCorrectException, AESEncryptException {
         KeyValueDatabase kvConn = new KeyValueDatabase(PreAuthorizationGson.sessionPrefix);
         if (!kvConn.exists(_sUsername)) {
             kvConn.close();

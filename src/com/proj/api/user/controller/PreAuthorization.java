@@ -6,6 +6,7 @@ import com.proj.api.database.RelationalDatabase;
 import com.proj.api.exception.database.NonRelationalDatabaseException;
 import com.proj.api.exception.database.RelationalDatabaseException;
 import com.proj.api.exception.user.UsernameNotExistException;
+import com.proj.api.exception.utils.AESEncryptException;
 import com.proj.api.user.gson.PreAuthorizationGson;
 import com.proj.api.utils.AESUtils;
 import com.proj.api.utils.RandomUtils;
@@ -25,7 +26,7 @@ public class PreAuthorization {
     private String sUsername;
     private String sKey;
 
-    public PreAuthorization(String _sUsername) throws UsernameNotExistException, RelationalDatabaseException, NonRelationalDatabaseException {
+    public PreAuthorization(String _sUsername) throws UsernameNotExistException, RelationalDatabaseException, NonRelationalDatabaseException, AESEncryptException {
         this.sUsername = _sUsername;
         String sRandomStr = RandomUtils.getRandomString(16);
         int iId, iType, iAuthority, iStatus;

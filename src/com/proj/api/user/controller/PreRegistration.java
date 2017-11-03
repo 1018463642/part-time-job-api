@@ -6,6 +6,7 @@ import com.proj.api.database.RelationalDatabase;
 import com.proj.api.exception.database.NonRelationalDatabaseException;
 import com.proj.api.exception.database.RelationalDatabaseException;
 import com.proj.api.exception.user.UserAlreadyExistException;
+import com.proj.api.exception.utils.AESEncryptException;
 import com.proj.api.user.gson.PreRegistrationInfGson;
 import com.proj.api.utils.AESUtils;
 import com.proj.api.utils.PhoneVerifyCodeUtils;
@@ -21,7 +22,7 @@ public class PreRegistration {
     private String sUsername;
     private String sKey;
 
-    public PreRegistration(String _sUsername, String _sPhoneNum) throws NonRelationalDatabaseException, RelationalDatabaseException, UserAlreadyExistException {
+    public PreRegistration(String _sUsername, String _sPhoneNum) throws NonRelationalDatabaseException, RelationalDatabaseException, UserAlreadyExistException, AESEncryptException {
         this.sUsername = _sUsername;
         RelationalDatabase rConn = new RelationalDatabase();
         ResultSet result = rConn.doQuery("SELECT id FROM user_auth WHERE username=?", new String[]{_sUsername});
@@ -40,6 +41,7 @@ public class PreRegistration {
         kvConn.close();
         String sPhoneVerifyCode = PhoneVerifyCodeUtils.send(_sPhoneNum);
         this.sKey = AESUtils.encryptData(sRandomStr, sPhoneVerifyCode);
+        System.out.println("code: " + AESUtils.encryptData("12345678", sRandomStr));
     }
 
     public String getsUsername() {

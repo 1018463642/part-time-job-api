@@ -90,13 +90,18 @@ public class RelationalDatabase {
 
     public int getLastInsertId(String _sTable) throws RelationalDatabaseException {
         try {
-            this.pstmt = this.conn.prepareStatement("select last_insert_id() as last_id from "+_sTable);
-            return Integer.valueOf(pstmt.executeQuery().getString("last_id"));
+            this.pstmt = this.conn.prepareStatement("select last_insert_id() as last_id from " + _sTable);
+            ResultSet result = pstmt.executeQuery();
+            if (result.first()) {
+                return Integer.valueOf(result.getString("last_id"));
+            } else {
+                return -1;
+            }
         } catch (SQLException e) {
             try {
                 this.conn.rollback();
             } catch (SQLException e1) {
-                throw new RelationalDatabaseException(e,e1);
+                throw new RelationalDatabaseException(e, e1);
             }
             throw new RelationalDatabaseException(e);
         }
