@@ -4,6 +4,9 @@ package com.proj.api.user.gson;
  * Created by jangitlau on 2017/11/3.
  */
 public class LoggedInUserInfGson {
+    public final static int iSessionExpire = 120;
+    public final static String sessionPrefix = "user_inf_";
+
     private int iId;
     private String sUserName;
     private int iType;

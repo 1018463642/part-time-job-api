@@ -1,4 +1,4 @@
-package com.proj.api.user;
+package com.proj.api.user.controller;
 
 import com.google.gson.Gson;
 import com.proj.api.database.KeyValueDatabase;
@@ -21,6 +21,7 @@ public class PreAuthorization {
     private RelationalDatabase dbConn = null;
     private KeyValueDatabase jedisConn = null;
 
+    private String sRandomStr;
     private String sUsername;
     private String sKey;
 
@@ -60,6 +61,19 @@ public class PreAuthorization {
         } finally {
             jedisConn.close();
         }
-        this.sKey = AESUtils.encryptData(sRandomStr, sTranPassword).trim();
+
+        this.sKey = AESUtils.encryptData(sRandomStr, sTranPassword);
+        this.sRandomStr=sRandomStr;
+    }
+
+    public String getsUsername() {
+        return sUsername;
+    }
+
+    public String getsKey() {
+        return sKey;
+    }
+    public String rand(){
+        return sRandomStr;
     }
 }
