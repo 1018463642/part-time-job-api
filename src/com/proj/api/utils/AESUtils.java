@@ -19,7 +19,7 @@ public class AESUtils {
             } else if (_sKey.length() > 16) {
                 _sKey = _sKey.substring(0, 16);
             }
-            Cipher cipher = Cipher.getInstance("AESUtils/CBC/NoPadding");
+            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
             int blockSize = cipher.getBlockSize();
             byte[] dataBytes = _sData.getBytes();
             int plaintextLength = dataBytes.length;
@@ -28,7 +28,7 @@ public class AESUtils {
             }
             byte[] plaintext = new byte[plaintextLength];
             System.arraycopy(dataBytes, 0, plaintext, 0, dataBytes.length);
-            SecretKeySpec keyspec = new SecretKeySpec(_sKey.getBytes(), "AESUtils");
+            SecretKeySpec keyspec = new SecretKeySpec(_sKey.getBytes(), "AES");
             IvParameterSpec ivspec = new IvParameterSpec(_sKey.getBytes());
             cipher.init(Cipher.ENCRYPT_MODE, keyspec, ivspec);
             byte[] encrypted = cipher.doFinal(plaintext);

@@ -34,7 +34,7 @@ public class Authorization {
             kvConn.close();
             throw new PasswordNotCorrectException(); //随机数不正确，说明密码不正确，需要发出登录警告
         }
-        String sAuthPassword = String.valueOf(DigestUtils.md5(sPrePassword + Authorization.sAuthPasswordSalt));
+        String sAuthPassword = DigestUtils.md5Hex(sPrePassword + Authorization.sAuthPasswordSalt);
         if (!sAuthPassword.equals(preAuthorizationGson.getsAuthPassword())) {
             kvConn.del(_sUsername);
             kvConn.close();
@@ -56,7 +56,6 @@ public class Authorization {
         this.iId=preAuthorizationGson.getiId();
         this.sUsername=preAuthorizationGson.getsUserName();
         this.sPreToken= AESUtils.encryptData(sToken, preAuthorizationGson.getsTranPassword());
-        System.out.println(json.toJson(loggedInUserInfGson));
     }
 
     public int getiId() {
