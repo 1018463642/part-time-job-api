@@ -4,6 +4,9 @@ package com.proj.api.user.gson;
  * Created by jangitlau on 2017/11/2.
  */
 public class PreAuthorizationGson {
+    public final static int iSessionExpire = 60;
+    public final static String sessionPrefix = "user_preauth_";
+
     private int iId;
     private String sUserName;
     private String sTranPassword;

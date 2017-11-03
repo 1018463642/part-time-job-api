@@ -21,8 +21,6 @@ import java.sql.SQLException;
 public class PreAuthorization {
     private RelationalDatabase dbConn = null;
     private KeyValueDatabase jedisConn = null;
-    public static String sessionPrefix = "";
-    private final static int iSessionExpire = 60;
 
     private String sUsername;
     private String sKey;
@@ -56,8 +54,8 @@ public class PreAuthorization {
         String session_msg = json.toJson(new PreAuthorizationGson(iId, this.sUsername, sTranPassword, sAuthPassword, sRandomStr, iType, iAuthority, iStatus));
         //load jedis and put session msg
         try {
-            jedisConn = new KeyValueDatabase(PreAuthorization.sessionPrefix);
-            jedisConn.set(this.sUsername, session_msg, iSessionExpire);
+            jedisConn = new KeyValueDatabase(PreAuthorizationGson.sessionPrefix);
+            jedisConn.set(this.sUsername, session_msg, PreAuthorizationGson.iSessionExpire);
         } catch (JedisException e) {
             throw new NonRelationalDatabaseException(e);
         } finally {
