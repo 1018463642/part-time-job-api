@@ -21,6 +21,7 @@ public class KeyValueDatabase {
             redis = KeyValueDatabase.pool.getResource();
             this.sPrefix = _sPrefix;
         } catch (JedisException e) {
+            close();
             throw new NonRelationalDatabaseException(e);
         }
     }
@@ -30,6 +31,7 @@ public class KeyValueDatabase {
             redis = KeyValueDatabase.pool.getResource();
             this.sPrefix = "";
         } catch (JedisException e) {
+            close();
             throw new NonRelationalDatabaseException(e);
         }
     }
@@ -42,6 +44,7 @@ public class KeyValueDatabase {
         try {
             redis.set(_sKey, _sValue);
         } catch (JedisException e) {
+            close();
             throw new NonRelationalDatabaseException(e);
         }
     }
@@ -51,6 +54,7 @@ public class KeyValueDatabase {
             this.set(this.sPrefix + _sKey, _sValue);
             redis.expire(this.sPrefix + _sKey, _iExpire);
         } catch (JedisException e) {
+            close();
             throw new NonRelationalDatabaseException(e);
         }
     }
@@ -59,6 +63,7 @@ public class KeyValueDatabase {
         try {
             redis.del(this.sPrefix + _sKey);
         } catch (JedisException e) {
+            close();
             throw new NonRelationalDatabaseException(e);
         }
     }
@@ -67,6 +72,7 @@ public class KeyValueDatabase {
         try {
             return redis.get(this.sPrefix + _sKey);
         } catch (JedisException e) {
+            close();
             throw new NonRelationalDatabaseException(e);
         }
     }
@@ -75,6 +81,7 @@ public class KeyValueDatabase {
         try {
             return redis.exists(this.sPrefix + _sKey);
         } catch (JedisException e) {
+            close();
             throw new NonRelationalDatabaseException(e);
         }
     }
@@ -83,6 +90,7 @@ public class KeyValueDatabase {
         try {
             redis.expire(this.sPrefix + _sKey, _iExpire);
         } catch (JedisException e) {
+            close();
             throw new NonRelationalDatabaseException(e);
         }
     }

@@ -9,13 +9,13 @@ import com.proj.api.user.gson.LoggedInUserInfGson;
 import com.proj.api.user.gson.PreAuthorizationGson;
 import com.proj.api.utils.AESUtils;
 import com.proj.api.utils.RandomUtils;
+import com.proj.api.utils.SaltUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * Created by jangitlau on 2017/11/3.
  */
 public class Authorization {
-    private final static String sAuthPasswordSalt = "";
     private int iId;
     private String sUsername;
     private String sPreToken;
@@ -34,7 +34,7 @@ public class Authorization {
             kvConn.close();
             throw new PasswordNotCorrectException(); //随机数不正确，说明密码不正确，需要发出登录警告
         }
-        String sAuthPassword = DigestUtils.md5Hex(sPrePassword + Authorization.sAuthPasswordSalt);
+        String sAuthPassword = DigestUtils.md5Hex(sPrePassword + SaltUtils.sAuthPasswordSalt);
         if (!sAuthPassword.equals(preAuthorizationGson.getsAuthPassword())) {
             kvConn.del(_sUsername);
             kvConn.close();

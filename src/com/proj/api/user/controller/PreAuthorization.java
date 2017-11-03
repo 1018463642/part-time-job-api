@@ -61,7 +61,7 @@ public class PreAuthorization {
         } finally {
             jedisConn.close();
         }
-
+        System.out.println(sRandomStr);
         this.sKey = AESUtils.encryptData(sRandomStr, sTranPassword);
         this.sRandomStr=sRandomStr;
     }

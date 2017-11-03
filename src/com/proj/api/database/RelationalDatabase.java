@@ -52,6 +52,25 @@ public class RelationalDatabase {
         }
     }
 
+    public boolean doSQL(String _sSQL,Object[] aParams) throws RelationalDatabaseException {
+        try {
+            this.pstmt = this.conn.prepareStatement(_sSQL);
+            for(int i=0;i<aParams.length;i++){
+                this.pstmt.setObject(i+1,aParams[i]);
+            }
+            boolean result=this.pstmt.execute();
+            this.pstmt.close();
+            return result;
+        } catch (SQLException e) {
+            try {
+                this.conn.rollback();
+            } catch (SQLException e1) {
+                throw new RelationalDatabaseException(e,e1);
+            }
+            throw new RelationalDatabaseException(e);
+        }
+    }
+
     public ResultSet doQuery(String _sSQL,Object[] aParams) throws RelationalDatabaseException {
         try {
             this.pstmt = this.conn.prepareStatement(_sSQL);
@@ -59,6 +78,20 @@ public class RelationalDatabase {
                 this.pstmt.setObject(i+1,aParams[i]);
             }
             return pstmt.executeQuery();
+        } catch (SQLException e) {
+            try {
+                this.conn.rollback();
+            } catch (SQLException e1) {
+                throw new RelationalDatabaseException(e,e1);
+            }
+            throw new RelationalDatabaseException(e);
+        }
+    }
+
+    public int getLastInsertId(String _sTable) throws RelationalDatabaseException {
+        try {
+            this.pstmt = this.conn.prepareStatement("select last_insert_id() as last_id from "+_sTable);
+            return Integer.valueOf(pstmt.executeQuery().getString("last_id"));
         } catch (SQLException e) {
             try {
                 this.conn.rollback();
